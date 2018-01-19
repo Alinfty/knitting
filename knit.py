@@ -3,15 +3,15 @@ from math import sqrt
 import numpy as np
 
 img=cv2.imread('c:\\users\\alin\\desktop\\2.jpg')
-kn=cv2.imread('c:\\users\\alin\\desktop\\knit.jpg', 0)
+kn=cv2.imread('knit.jpg', 0)
 
 
-m=10
-r=15
+m=14
+r=3*m//2
 
-knit=[[ kn[1725+(135*i)//r][710+(120*j)//r] for j in range(r)] for i in range(r)]\
-+[[ kn[1860+(80*i)//m][710+(120*j)//r] for j in range(r)] for i in range(m)]\
-+[[ kn[1940+(135*i)//r][710+(120*j)//r] for j in range(r)] for i in range(r)]
+knit=[[ kn[1725+(135*i)//(r-1)][710+(120*j)//(r-1)] for j in range(r)] for i in range(r)]\
++[[ kn[1860+(80*i)//(m-1)][710+(120*j)//(r-1)] for j in range(r)] for i in range(m)]\
++[[ kn[1940+(135*i)//(r-1)][710+(120*j)//(r-1)] for j in range(r)] for i in range(r)]
 
 cv2.imwrite('c:\\users\\alin\\desktop\\temp.bmp', np.array(knit))
 print(knit)
@@ -114,4 +114,4 @@ for i in range(-1,row//(r+m)+1):
                     if 0<=(r+m)*i+m+r+k<row and 0<=r*j+l<col:
                         img[(r+m)*i+m+r+k][r*j+l]= list(map(lambda x: int(x*knit[r+m+k][r-l-1]), avg))
 
-cv2.imwrite('c:\\users\\alin\\desktop\\re2_1.jpg', img)
+cv2.imwrite('c:\\users\\alin\\desktop\\re2_2.jpg', img)

@@ -2,19 +2,33 @@ import cv2
 from math import sqrt
 import numpy as np
 
-img=cv2.imread('c:\\users\\alin\\desktop\\2.jpg')
+
 kn=cv2.imread('knit.jpg', 0)
 
 
-m=14
+m=8
 r=3*m//2
 
-knit=[[ kn[1725+(135*i)//(r-1)][710+(120*j)//(r-1)] for j in range(r)] for i in range(r)]\
-+[[ kn[1860+(80*i)//(m-1)][710+(120*j)//(r-1)] for j in range(r)] for i in range(m)]\
-+[[ kn[1940+(135*i)//(r-1)][710+(120*j)//(r-1)] for j in range(r)] for i in range(r)]
+knit=[[ kn[1725+(135*i)//r][710+(120*j)//r]+6 for j in range(r)] for i in range(r)]\
++[[ kn[1860+(80*i)//m][710+(120*j)//r]+6 for j in range(r)] for i in range(m)]\
++[[ kn[1940+(135*i)//r][710+(120*j)//r]+6 for j in range(r)] for i in range(r)]
+
 
 cv2.imwrite('c:\\users\\alin\\desktop\\temp.bmp', np.array(knit))
 print(knit)
+
+ma=0
+mi=300
+for a in knit:
+    for b in a:
+        if b>ma:
+            ma=b
+        if b<mi:
+            mi=b
+
+print(ma, mi)
+
+img=cv2.imread('c:\\users\\alin\\desktop\\20160809_091229.jpg')
 
 row=len(img)
 col=len(img[0])
@@ -22,6 +36,7 @@ col=len(img[0])
 #newimg=[[[int(img[i][j][0])*int(img[i][j][0])/(256.0*256),int(img[i][j][1])*int(img[i][j][1]/(256.0*256)),int(img[i][j][2])*int(img[i][j][2])/(256.0*256)] for j in range(col)] for i in range(row)]
 newimg=np.float32(img)
 newimg=newimg*1/256
+newimg=cv2.cvtColor(newimg, cv2.COLOR_BGR2Lab)
 #newimg=newimg*newimg
 
 
@@ -114,4 +129,7 @@ for i in range(-1,row//(r+m)+1):
                     if 0<=(r+m)*i+m+r+k<row and 0<=r*j+l<col:
                         img[(r+m)*i+m+r+k][r*j+l]= list(map(lambda x: int(x*knit[r+m+k][r-l-1]), avg))
 
-cv2.imwrite('c:\\users\\alin\\desktop\\re2_2.jpg', img)
+
+
+img=cv2.cvtColor(img, cv2.COLOR_Lab2BGR)
+cv2.imwrite('c:\\users\\alin\\desktop\\re20160809_091229_2.jpg', img)

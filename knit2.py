@@ -6,7 +6,7 @@ import numpy as np
 kn=cv2.imread('knit.jpg', 0)
 
 
-m=10
+m=20
 r=3*m//2
 
 knit=[[ kn[1725+(135*i)//r][710+(120*j)//r]+6 for j in range(r)] for i in range(r)]\
@@ -30,7 +30,7 @@ for a in knit:
 
 print(ma, mi)
 
-img=cv2.imread('c:\\users\\alin\\desktop\\circle.bmp')
+img=cv2.imread('c:\\users\\alin\\desktop\\KakaoTalk_20180120_233055893.jpg')
 
 row=len(img)
 col=len(img[0])
@@ -39,7 +39,7 @@ col=len(img[0])
 newimg=np.float32(img)
 newimg=newimg*1/256
 outimg=newimg*1/256
-newimg=cv2.cvtColor(newimg, cv2.COLOR_BGR2Lab)
+#newimg=cv2.cvtColor(newimg, cv2.COLOR_BGR2Lab)
 #newimg=newimg*newimg
 
 
@@ -134,8 +134,9 @@ for i in range(-1,row//(r+m)+1):
 
 
 
-outimg=cv2.cvtColor(outimg, cv2.COLOR_Lab2BGR)
+#outimg=cv2.cvtColor(outimg, cv2.COLOR_Lab2BGR)
 print(outimg)
-outimg=outimg*255
+outimg=outimg*256
 img=np.uint8(outimg)
-cv2.imwrite('c:\\users\\alin\\desktop\\devide.jpg', img)
+print(img)
+cv2.imwrite('c:\\users\\alin\\desktop\\Kakao0.jpg', img)

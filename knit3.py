@@ -1,5 +1,6 @@
+#this is for reducing the number of colors. fail
+
 import cv2
-from copy import deepcopy
 from math import sqrt
 import numpy as np
 
@@ -7,17 +8,17 @@ import numpy as np
 kn=cv2.imread('knit.jpg', 0)
 
 
-m=14
+m=20
 r=3*m//2
 
-knit=[[ (kn[1725+(135*i)//r][710+(120*j)//r]+6)/255 for j in range(r)] for i in range(r)]\
-+[[ (kn[1860+(80*i)//m][710+(120*j)//r]+6)/255 for j in range(r)] for i in range(m)]\
-+[[ (kn[1940+(135*i)//r][710+(120*j)//r]+6)/255 for j in range(r)] for i in range(r)]
+knit=[[ kn[1725+(135*i)//r][710+(120*j)//r]+6 for j in range(r)] for i in range(r)]\
++[[ kn[1860+(80*i)//m][710+(120*j)//r]+6 for j in range(r)] for i in range(m)]\
++[[ kn[1940+(135*i)//r][710+(120*j)//r]+6 for j in range(r)] for i in range(r)]
 
 
-#cv2.imwrite('c:\\users\\alin\\desktop\\temp.bmp', np.array(knit))
-#knit=np.float32(knit)
-#knit=knit*1/255
+cv2.imwrite('c:\\users\\alin\\desktop\\temp.bmp', np.array(knit))
+knit=np.float32(knit)
+knit=knit*1/255
 print(knit)
 
 ma=0
@@ -31,15 +32,16 @@ for a in knit:
 
 print(ma, mi)
 
-img=cv2.imread('c:\\users\\alin\\desktop\\20160806_094220.jpg')
+img=cv2.imread('c:\\users\\alin\\desktop\\KakaoTalk_20180120_233055893.jpg')
 
 row=len(img)
 col=len(img[0])
 
 #newimg=[[[int(img[i][j][0])*int(img[i][j][0])/(256.0*256),int(img[i][j][1])*int(img[i][j][1]/(256.0*256)),int(img[i][j][2])*int(img[i][j][2])/(256.0*256)] for j in range(col)] for i in range(row)]
-
-newimg=img.tolist()
-outimg=deepcopy(newimg)
+newimg=np.float32(img)
+newimg=newimg*1/256
+outimg=newimg*1/256
+#newimg=cv2.cvtColor(newimg, cv2.COLOR_BGR2Lab)
 #newimg=newimg*newimg
 
 
@@ -75,20 +77,20 @@ for i in range(-1,row//(r+m)+1):
                         sum[2]+=tem[2]
             
             if s!=0:
-                avg=[sum[0]/s,sum[1]/s,sum[2]/s]
+                avg=[int(256*sum[0]/s)//32+1,int(256*sum[1]/s)//32+1,int(256*sum[2]/s)//32+1]
 
-            for k in range(r):
-                for l in range(k+1):
-                    if 0<=(r+m)*i+k<row and 0<=r*j+l<col:
-                        outimg[(r+m)*i+k][r*j+l]= list(map(lambda x: int(x*knit[k][l]), avg))
-            for k in range(m):
-                for l in range(r):
-                    if 0<=(r+m)*i+r+k<row and 0<=r*j+l<col:
-                       outimg[(r+m)*i+r+k][r*j+l]= list(map(lambda x: int(x*knit[r+k][l]), avg))
-            for k in range(r):
-                for l in range(r-k):
-                    if 0<=(r+m)*i+m+r+k<row and 0<=r*j+r-l-1<col:
-                        outimg[(r+m)*i+m+r+k][r*j+r-l-1]= list(map(lambda x: int(x*knit[r+m+k][r-l-1]), avg))
+                for k in range(r):
+                    for l in range(k+1):
+                        if 0<=(r+m)*i+k<row and 0<=r*j+l<col:
+                            outimg[(r+m)*i+k][r*j+l]= list(map(lambda x: 32*int(x*knit[k][l]), avg))
+                for k in range(m):
+                    for l in range(r):
+                        if 0<=(r+m)*i+r+k<row and 0<=r*j+l<col:
+                           outimg[(r+m)*i+r+k][r*j+l]= list(map(lambda x: 32*int(x*knit[r+k][l]), avg))
+                for k in range(r):
+                    for l in range(r-k):
+                        if 0<=(r+m)*i+m+r+k<row and 0<=r*j+r-l-1<col:
+                            outimg[(r+m)*i+m+r+k][r*j+r-l-1]= list(map(lambda x: 32*int(x*knit[r+m+k][r-l-1]), avg))
 
         else:
             for k in range(r):
@@ -117,21 +119,25 @@ for i in range(-1,row//(r+m)+1):
                         sum[2]+=tem[2]
 
             if s!=0:
-                avg=[sum[0]/s,sum[1]/s,sum[2]/s]
+                avg=[int(256*sum[0]/s)//32+1,int(256*sum[1]/s)//32+1,int(256*sum[2]/s)//32+1]
        
-            for k in range(r):
-                for l in range(k+1):
-                    if 0<=(r+m)*i+k<row and 0<=r*j+r-l-1<col:
-                        outimg[(r+m)*i+k][r*j+r-l-1]= list(map(lambda x: int(x*knit[k][l]), avg))
-            for k in range(m):
-                for l in range(r):
-                    if 0<=(r+m)*i+r+k<row and 0<=r*j+l<col:
-                        outimg[(r+m)*i+r+k][r*j+l]= list(map(lambda x: int(x*knit[r+k][r-l-1]), avg))
-            for k in range(r):
-                for l in range(r-k):
-                    if 0<=(r+m)*i+m+r+k<row and 0<=r*j+l<col:
-                        outimg[(r+m)*i+m+r+k][r*j+l]= list(map(lambda x: int(x*knit[r+m+k][r-l-1]), avg))
+                for k in range(r):
+                    for l in range(k+1):
+                        if 0<=(r+m)*i+k<row and 0<=r*j+r-l-1<col:
+                            outimg[(r+m)*i+k][r*j+r-l-1]= list(map(lambda x: 32*int(x*knit[k][l]), avg))
+                for k in range(m):
+                    for l in range(r):
+                        if 0<=(r+m)*i+r+k<row and 0<=r*j+l<col:
+                            outimg[(r+m)*i+r+k][r*j+l]= list(map(lambda x: 32*int(x*knit[r+k][r-l-1]), avg))
+                for k in range(r):
+                    for l in range(r-k):
+                        if 0<=(r+m)*i+m+r+k<row and 0<=r*j+l<col:
+                            outimg[(r+m)*i+m+r+k][r*j+l]= list(map(lambda x: 32*int(x*knit[r+m+k][r-l-1]), avg))
 
 
+
+#outimg=cv2.cvtColor(outimg, cv2.COLOR_Lab2BGR)
+print(outimg)
 img=np.uint8(outimg)
-cv2.imwrite('c:\\users\\alin\\desktop\\re20160806_094220_3.jpg', img)
+print(img)
+cv2.imwrite('c:\\users\\alin\\desktop\\Kakao4.jpg', img)
